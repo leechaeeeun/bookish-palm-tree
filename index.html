@@ -208,11 +208,12 @@
 </div>
 <div id="commentList" class="comment-list">
 </div>
+<div id="commentError" class="error"></div>
 <label class="field">댓글<textarea name="body" rows="3" maxlength="500" required placeholder="응원, 질문, 도움 내용을 남겨주세요">
 </textarea>
 </label>
 <div class="actions">
-<button class="btn primary">댓글 남기기</button>
+<button id="submitComment" class="btn primary">댓글 남기기</button>
 </div>
 </form>
 </div>
@@ -345,7 +346,7 @@ $('#closeEvent').onclick=$('#cancelEvent').onclick=()=>$('#eventModal').classLis
 $('#eventForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget),id=f.get('id'),row={event_type:currentView,title:f.get('title'),start_date:f.get('start_date'),end_date:f.get('end_date'),details:f.get('details'),owner_email:member.email,updated_at:new Date().toISOString()};if(id)await supabase.from('shared_calendar_events').update(row).eq('id',id);else await supabase.from('shared_calendar_events').insert(row);$('#eventModal').classList.add('hidden');await load()};
 $('#deleteEvent').onclick=async()=>{const id=$('#eventForm').id.value;if(id&&confirm('이 일정을 삭제할까요?')){await supabase.from('shared_calendar_events').delete().eq('id',id);$('#eventModal').classList.add('hidden');await load()}};
 $('#closeComment').onclick=()=>$('#commentModal').classList.add('hidden');
-$('#commentForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);const{data}=await supabase.from('dashboard_comments').insert({target_email:activeEmail,author_email:member.email,week_start:weekStart(),body:f.get('body')}).select().single();if(data)comments.push(data);e.currentTarget.reset();renderComments();render()};
+$('#commentForm').onsubmit=async e=>{e.preventDefault();const form=e.currentTarget,button=$('#submitComment'),f=new FormData(form),body=String(f.get('body')).trim();if(!body)return;button.disabled=true;button.textContent='저장 중…';$('#commentError').textContent='';const{error}=await supabase.from('dashboard_comments').insert({target_email:activeEmail,author_email:member.email,week_start:weekStart(),body});if(error){$('#commentError').textContent='댓글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.';button.disabled=false;button.textContent='댓글 남기기';return}const{data:fresh}=await supabase.from('dashboard_comments').select('*').eq('week_start',weekStart()).order('created_at');comments=fresh||[];form.reset();renderComments();render();button.disabled=false;button.textContent='댓글 남기기'};
 $('#passwordForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget),p=String(f.get('password')),c=String(f.get('confirm'));if(p!==c){$('#passwordError').textContent='비밀번호가 일치하지 않아요.';return}const{error}=await supabase.auth.updateUser({password:p});if(error){$('#passwordError').textContent=error.message;return}await supabase.from('team_members').update({must_change_password:false}).eq('email',member.email);member.must_change_password=false;$('#passwordModal').classList.add('hidden')};
 load();
 </script>
