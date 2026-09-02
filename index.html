@@ -9,6 +9,8 @@
 @media(max-width:900px){.app{grid-template-columns:72px 1fr}.side{padding:20px 10px}.brand{font-size:0}.brand b{font-size:17px}.workspace,.nav span,.user b,.user small{display:none}.main{padding:17px}.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
 @media(max-width:580px){.mission{grid-template-columns:1fr}.team-grid{grid-template-columns:1fr}.top{align-items:flex-start}.top p{display:none}.top h1{font-size:19px}.top-actions{display:grid}.top-actions .btn{padding:8px;font-size:9px}}
 .nav button{display:block;width:100%;padding:11px;border:0;border-radius:11px;background:transparent;color:#bcd0c5;text-align:left}.nav button.active{background:#28533f;color:#fff}.view{animation:fade .18s ease}@keyframes fade{from{opacity:.3;transform:translateY(3px)}}.kpi-row,.hall-row{display:grid;grid-template-columns:42px 1fr 2fr 90px;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--line)}.rank{font-size:18px;font-weight:950;color:#1d7b55}.calendar-nav{display:flex;justify-content:center;gap:16px;align-items:center;margin:12px}.calendar-week,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr)}.calendar-week span{padding:8px;text-align:center;color:var(--muted);font-size:9px;font-weight:900}.day{min-height:105px;padding:7px;border:1px solid #edf0ed;background:#fff}.day.off{background:#f6f7f5;color:#a8afa9}.day b{font-size:10px}.event-chip{display:block;width:100%;margin-top:5px;padding:5px;border:0;border-radius:6px;background:#e8f3ec;color:#20563d;text-align:left;font-size:8px}.event-chip.promotion{background:#fff0e7;color:#98491f}@media(max-width:700px){.kpi-row,.hall-row{grid-template-columns:34px 1fr 70px}.kpi-row .detail,.hall-row .detail{display:none}.day{min-height:75px}.event-chip{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+
+.sales-board{margin:14px 0 18px;padding:20px;border:1px solid var(--line);border-radius:18px;background:#fff}.sales-board .card-head{margin-bottom:14px}.period-summary{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;margin-bottom:12px;border-radius:14px;background:#eef6f0}.period-summary strong{display:block;font-size:20px;letter-spacing:-.04em}.period-summary .right{text-align:right}.period-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.period-card{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fafbf9}.period-card.active{border-color:#5c956f;background:#f1f8f3;box-shadow:inset 0 0 0 1px #5c956f}.period-card small{display:block;color:var(--muted);font-size:10px}.period-card b{display:block;margin:6px 0 5px}.period-card .numbers{display:flex;justify-content:space-between;font-size:11px}.period-card .bar{margin-top:7px}.sales-recent{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}.sales-row{display:grid;grid-template-columns:90px 1fr auto;gap:10px;padding:8px 2px;border-bottom:1px solid #edf0ed;font-size:12px}.sales-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:1050px){.period-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.period-grid{grid-template-columns:1fr}.period-summary{align-items:flex-start;flex-direction:column}.period-summary .right{text-align:left}.sales-row{grid-template-columns:75px 1fr}}
 </style>
 </head>
 <body>
@@ -55,6 +57,7 @@
 </div>
 <div class="top-actions">
 <a class="btn" href="https://chanwon-imc-funnel-report.lce0123.chatgpt.site/" target="_blank" rel="noopener">📊 8월 리뷰·9월 목표</a>
+<button id="openSales" class="btn primary hidden">＋ 오늘 매출 입력</button>
 <button id="openMission" class="btn hidden">🎯 팀 미션 설정</button>
 <button id="openHelp" class="btn help">🙋 도움 요청</button>
 <button id="openUpdate" class="btn primary">＋ 주간 업데이트</button>
@@ -62,25 +65,13 @@
 </header>
 <div id="homeView" class="view">
 <section class="mission">
-<div>
-<div class="label">WEEKLY TEAM MISSION</div>
-<h2 id="missionTitle">이번 주 팀 미션</h2>
-<p>각자의 퀘스트가 모여 팀의 큰 목표를 완성해요.</p>
-</div>
-<div>
-<div class="progress-copy">
-<span>현재 달성률</span>
-<b id="missionPercent">0%</b>
-</div>
-<div class="bar">
-<i id="missionBar">
-</i>
-</div>
-<div class="progress-copy" style="margin-top:7px">
-<span id="currentValue">0</span>
-<span id="targetValue">목표 0</span>
-</div>
-</div>
+<div><div class="label">MONTHLY SALES TARGET</div><h2 id="salesMonthTitle">9월 자사몰 매출 목표</h2><p>업무 진행률과 별개로, 입력된 일매출 합계로 달성률을 계산해요.</p></div>
+<div><div class="progress-copy"><span>누적 매출 달성률</span><b id="salesMonthPercent">0%</b></div><div class="bar"><i id="salesMonthBar"></i></div><div class="progress-copy" style="margin-top:7px"><span id="salesMonthCurrent">0억</span><span id="salesMonthTarget">목표 48억</span></div></div>
+</section>
+<section class="sales-board">
+<div class="card-head"><div><div class="section">PERIOD SALES TARGET</div><h3>이번 매출 구간 목표</h3></div><span class="pill">DAILY SALES</span></div>
+<div id="periodSummary" class="period-summary"></div><div id="salesPeriods" class="period-grid"></div>
+<div class="sales-recent"><div class="card-head"><div><div class="section">DAILY SALES LOG</div><h3>최근 일매출</h3></div></div><div id="salesRecent"></div></div>
 </section>
 <section class="stats">
 <div class="stat">
@@ -217,6 +208,11 @@
 </div>
 </form>
 </div>
+<div id="salesModal" class="modal hidden">
+<form id="salesForm"><div class="modal-head"><div><div class="section">DAILY SALES</div><h2>일매출 입력</h2></div><button type="button" id="closeSales" class="btn">×</button></div>
+<p class="muted">같은 날짜를 다시 저장하면 해당 날짜의 매출이 수정됩니다. 금액 단위는 억원입니다.</p>
+<label class="field">매출 날짜<input name="sales_date" type="date" required></label><label class="field">매출액(억원)<input name="amount" type="number" step="0.01" min="0" required placeholder="예: 1.25"></label><label class="field">메모<textarea name="note" rows="3" maxlength="300" placeholder="주요 캠페인, 특이사항 등"></textarea></label>
+<div class="actions"><button type="button" id="cancelSales" class="btn">취소</button><button class="btn primary">매출 저장</button></div></form></div>
 <div id="missionModal" class="modal hidden">
 <form id="missionForm">
 <div class="modal-head"><div><div class="section">TEAM MISSION</div><h2>주간 팀 미션 설정</h2></div><button type="button" id="closeMission" class="btn">×</button></div>
@@ -245,8 +241,11 @@
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 const supabase=createClient('https://hpbccidrxsdsaptjvwww.supabase.co','sb_publishable_Ia5lQq7LnL15Q-xoin3SMA_cFYj3p7r');
 const $=s=>document.querySelector(s);
-let me,member,updates=[],mission,members=[],comments=[],helps=[],events=[],activeEmail,editingEmail,currentView='home',calendarDate=new Date();
+let me,member,updates=[],mission,members=[],comments=[],helps=[],events=[],dailySales=[],salesTargets=[],monthlySalesTarget=null,activeEmail,editingEmail,currentView='home',calendarDate=new Date();
 const weekStart=()=>{const d=new Date(),day=d.getDay()||7;d.setHours(12,0,0,0);d.setDate(d.getDate()-day+1);return d.toISOString().slice(0,10)};
+const monthStart=()=>{const d=new Date();return ymd(new Date(d.getFullYear(),d.getMonth(),1))};
+const monthEnd=()=>{const d=new Date();return ymd(new Date(d.getFullYear(),d.getMonth()+1,0))};
+const money=n=>Number(n||0).toLocaleString('ko-KR',{maximumFractionDigits:2})+'억';
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function load(){
  const{data:{session}}=await supabase.auth.getSession();
@@ -255,15 +254,18 @@ async function load(){
  const{data:m}=await supabase.from('team_members').select('*').eq('email',me.email.toLowerCase()).single();
  if(!m){await supabase.auth.signOut();$('#loginError').textContent='등록되지 않은 계정입니다.';return}
  member=m;
- const [{data:u},{data:mi},{data:tm},{data:c},{data:h},{data:ev}]=await Promise.all([
+ const [{data:u},{data:mi},{data:tm},{data:c},{data:h},{data:ev},{data:ds},{data:st},{data:mst}]=await Promise.all([
   supabase.from('weekly_updates').select('*').eq('week_start',weekStart()).order('updated_at',{ascending:false}),
   supabase.from('team_missions').select('*').eq('week_start',weekStart()).maybeSingle(),
   supabase.from('team_members').select('*').order('role'),
   supabase.from('dashboard_comments').select('*').eq('week_start',weekStart()).order('created_at'),
   supabase.from('help_requests').select('*').eq('week_start',weekStart()),
-  supabase.from('shared_calendar_events').select('*').order('start_date')
+  supabase.from('shared_calendar_events').select('*').order('start_date'),
+  supabase.from('daily_sales').select('*').gte('sales_date',monthStart()).lte('sales_date',monthEnd()).order('sales_date',{ascending:false}),
+  supabase.from('sales_period_targets').select('*').gte('start_date',monthStart()).lte('end_date',monthEnd()).order('sort_order'),
+  supabase.from('monthly_sales_targets').select('*').eq('month_start',monthStart()).maybeSingle()
  ]);
- updates=u||[];mission=mi;members=tm||[];comments=c||[];helps=h||[];events=ev||[];
+ updates=u||[];mission=mi;members=tm||[];comments=c||[];helps=h||[];events=ev||[];dailySales=ds||[];salesTargets=st||[];monthlySalesTarget=mst||null;
  render();$('#login').classList.add('hidden');$('#app').classList.remove('hidden');
  if(member.must_change_password)$('#passwordModal').classList.remove('hidden');
 }
@@ -273,8 +275,8 @@ function render(){
  $('#hello').textContent=`좋은 오후예요, ${member.name}님 👋`;$('#myTitle').textContent=`${member.name}님의 KPI`;
  $('#updatedCount').textContent=updates.length;$('#updatePill').textContent=`${updates.length} UPDATED`;
  $('#average').textContent=`${Math.round(updates.reduce((a,x)=>a+x.progress,0)/(updates.length||1))}%`;$('#helpCount').textContent=openHelps.length;
- if(mission){const p=Math.min(100,Math.round(mission.current_value/mission.target_value*100));$('#missionTitle').textContent=mission.title;$('#missionPercent').textContent=p+'%';$('#missionBar').style.width=p+'%';$('#currentValue').textContent=mission.current_value+mission.unit;$('#targetValue').textContent='목표 '+mission.target_value+mission.unit}
- $('#openMission').classList.toggle('hidden',!member.is_admin);
+ renderSales();
+ $('#openMission').classList.toggle('hidden',!member.is_admin);$('#openSales').classList.toggle('hidden',!member.is_admin);
  $('#myKpi').textContent=mine?.kpi||'아직 업데이트가 없어요.';$('#myBar').style.width=(mine?.progress||0)+'%';$('#myProgress').textContent=(mine?.progress||0)+'%';$('#myTasks').innerHTML=(mine?.tasks||[]).map(t=>`<div class="task">✓ ${esc(t)}</div>`).join('');$('#adminBox').classList.toggle('hidden',!member.is_admin);
  const colors=['#dff55b','#b8e6ff','#ffd3a3','#c9bcff','#ffb7c6','#b7e6c9'];
  $('#teamGrid').innerHTML=members.map((m,i)=>{const u=updates.find(x=>x.member_email===m.email),help=openHelps.find(x=>x.requested_from_email===m.email),requester=help?members.find(x=>x.email===help.member_email):null,count=comments.filter(x=>x.target_email===m.email).length,manage=member.is_admin||(member.role==='파트장'&&m.role==='인플루언서 마케터');return `<article class="member ${help?'helping':''}">
@@ -300,6 +302,15 @@ function render(){
  document.querySelectorAll('[data-manage]').forEach(b=>b.onclick=()=>openKpi(b.dataset.manage));
  document.querySelectorAll('[data-resolve]').forEach(b=>b.onclick=()=>resolveHelp(b.dataset.resolve));
  renderSecondary();
+}
+function renderSales(){
+ const total=dailySales.reduce((sum,row)=>sum+Number(row.amount||0),0),target=Number(monthlySalesTarget?.target_amount||48),percent=target?Math.min(100,Math.round(total/target*100)):0;
+ const now=new Date(),monthName=(now.getMonth()+1)+'월';
+ $('#salesMonthTitle').textContent=monthlySalesTarget?.title||monthName+' 자사몰 매출 목표';$('#salesMonthPercent').textContent=percent+'%';$('#salesMonthBar').style.width=percent+'%';$('#salesMonthCurrent').textContent='누적 '+money(total);$('#salesMonthTarget').textContent='목표 '+money(target);
+ const today=ymd(new Date()),active=salesTargets.find(p=>p.start_date<=today&&p.end_date>=today)||salesTargets.find(p=>p.start_date>today)||salesTargets.at(-1);
+ if(active){const actual=dailySales.filter(x=>x.sales_date>=active.start_date&&x.sales_date<=active.end_date).reduce((s,x)=>s+Number(x.amount||0),0),pp=Math.min(100,Math.round(actual/Number(active.target_amount)*100));$('#periodSummary').innerHTML=`<div><small>${esc(active.start_date.slice(5).replace('-','/'))}–${esc(active.end_date.slice(5).replace('-','/'))} · 현재 구간</small><strong>${esc(active.period_name)}</strong><div class="muted">${esc(active.description)}</div></div><div class="right"><b>${money(actual)} / ${money(active.target_amount)}</b><div>${pp}% 달성</div></div>`}else $('#periodSummary').innerHTML='<div class="sales-empty">등록된 매출 구간 목표가 없습니다.</div>';
+ $('#salesPeriods').innerHTML=salesTargets.map(p=>{const actual=dailySales.filter(x=>x.sales_date>=p.start_date&&x.sales_date<=p.end_date).reduce((s,x)=>s+Number(x.amount||0),0),pct=Math.min(100,Math.round(actual/Number(p.target_amount)*100)),on=active?.id===p.id;return `<article class="period-card ${on?'active':''}"><small>${esc(p.start_date.slice(5).replace('-','/'))}–${esc(p.end_date.slice(5).replace('-','/'))}</small><b>${esc(p.period_name)}</b><div class="numbers"><span>${money(actual)}</span><span>목표 ${money(p.target_amount)}</span></div><div class="bar"><i style="width:${pct}%"></i></div><small style="margin-top:5px">${pct}% 달성</small></article>`}).join('');
+ $('#salesRecent').innerHTML=dailySales.length?dailySales.slice(0,7).map(x=>`<div class="sales-row"><b>${esc(x.sales_date.slice(5).replace('-','/'))}</b><span>${esc(x.note||'메모 없음')}</span><strong>${money(x.amount)}</strong></div>`).join(''):'<div class="sales-empty">아직 입력된 일매출이 없습니다. 관리자가 오늘 매출을 입력하면 여기에 표시돼요.</div>';
 }
 function renderSecondary(){
  const sorted=[...members].sort((a,b)=>(updates.find(x=>x.member_email===b.email)?.progress||0)-(updates.find(x=>x.member_email===a.email)?.progress||0));
@@ -334,6 +345,10 @@ function openKpi(email){editingEmail=email;const target=members.find(x=>x.email=
 $('#openUpdate').onclick=()=>openKpi(member.email);
 $('#closeUpdate').onclick=$('#cancelUpdate').onclick=()=>$('#updateModal').classList.add('hidden');
 $('#updateForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);await supabase.from('weekly_updates').upsert({member_email:editingEmail,week_start:weekStart(),kpi:f.get('kpi'),progress:Number(f.get('progress')),tasks:String(f.get('tasks')).split('\n').filter(Boolean),blocker:f.get('blocker'),status:f.get('status'),updated_at:new Date().toISOString()},{onConflict:'member_email,week_start'});$('#updateModal').classList.add('hidden');await load()};
+$('#openSales').onclick=()=>{const form=$('#salesForm'),today=ymd(new Date()),existing=dailySales.find(x=>x.sales_date===today);form.sales_date.value=today;form.amount.value=existing?.amount||'';form.note.value=existing?.note||'';$('#salesModal').classList.remove('hidden')};
+$('#closeSales').onclick=$('#cancelSales').onclick=()=>$('#salesModal').classList.add('hidden');
+$('#salesForm').onsubmit=async e=>{e.preventDefault();const form=new FormData(e.currentTarget),salesDate=String(form.get('sales_date'));const {error}=await supabase.from('daily_sales').upsert({sales_date:salesDate,amount:Number(form.get('amount')),note:String(form.get('note')||''),entered_by:member.email,updated_at:new Date().toISOString()},{onConflict:'sales_date'});if(error){alert('매출 저장에 실패했어요: '+error.message);return}$('#salesModal').classList.add('hidden');await load()};
+$('#salesForm').sales_date.onchange=e=>{const row=dailySales.find(x=>x.sales_date===e.target.value),form=$('#salesForm');form.amount.value=row?.amount||'';form.note.value=row?.note||''};
 $('#openMission').onclick=()=>{const f=$('#missionForm');f.title.value=mission?.title||'';f.current_value.value=mission?.current_value||0;f.target_value.value=mission?.target_value||0;f.unit.value=mission?.unit||'억원';$('#missionModal').classList.remove('hidden')};
 $('#closeMission').onclick=$('#cancelMission').onclick=()=>$('#missionModal').classList.add('hidden');
 $('#missionForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);await supabase.from('team_missions').upsert({week_start:weekStart(),title:f.get('title'),current_value:Number(f.get('current_value')),target_value:Number(f.get('target_value')),unit:f.get('unit'),updated_at:new Date().toISOString()},{onConflict:'week_start'});$('#missionModal').classList.add('hidden');await load()};
