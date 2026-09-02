@@ -263,7 +263,7 @@
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 const supabase=createClient('https://hpbccidrxsdsaptjvwww.supabase.co','sb_publishable_Ia5lQq7LnL15Q-xoin3SMA_cFYj3p7r');
 const $=s=>document.querySelector(s);
-let me,member,updates=[],mission,members=[],comments=[],helps=[],events=[],dailySales=[],salesTargets=[],monthlySalesTarget=null,taskItems=[],avatarUrls={},activeEmail,editingEmail,currentView='home',calendarDate=new Date();
+let me,member,updates=[],mission,members=[],comments=[],helps=[],events=[],dailySales=[],salesTargets=[],monthlySalesTarget=null,taskItems=[],avatarUrls={},officeChannel=null,activeEmail,editingEmail,currentView='home',calendarDate=new Date();
 const weekStart=()=>{const d=new Date(),day=d.getDay()||7;d.setHours(12,0,0,0);d.setDate(d.getDate()-day+1);return d.toISOString().slice(0,10)};
 const monthStart=()=>{const d=new Date();return ymd(new Date(d.getFullYear(),d.getMonth(),1))};
 const monthEnd=()=>{const d=new Date();return ymd(new Date(d.getFullYear(),d.getMonth()+1,0))};
@@ -289,7 +289,7 @@ async function load(){
   supabase.from('weekly_task_items').select('*').order('week_start',{ascending:false}).order('sort_order')
  ]);
  updates=u||[];mission=mi;members=tm||[];comments=c||[];helps=h||[];events=ev||[];dailySales=ds||[];salesTargets=st||[];monthlySalesTarget=mst||null;taskItems=ti||[];await loadAvatarUrls();
- render();$('#login').classList.add('hidden');$('#app').classList.remove('hidden');
+ render();subscribeOffice();$('#login').classList.add('hidden');$('#app').classList.remove('hidden');
  if(member.must_change_password)$('#passwordModal').classList.remove('hidden');
 }
 function render(){
@@ -334,6 +334,10 @@ function renderSales(){
  if(active){const actual=dailySales.filter(x=>x.sales_date>=active.start_date&&x.sales_date<=active.end_date).reduce((s,x)=>s+Number(x.amount||0),0),pp=Math.min(100,Math.round(actual/Number(active.target_amount)*100));$('#periodSummary').innerHTML=`<div><small>${esc(active.start_date.slice(5).replace('-','/'))}–${esc(active.end_date.slice(5).replace('-','/'))} · 현재 구간</small><strong>${esc(active.period_name)}</strong><div class="muted">${esc(active.description)}</div></div><div class="right"><b>${money(actual)} / ${money(active.target_amount)}</b><div>${pp}% 달성</div></div>`}else $('#periodSummary').innerHTML='<div class="sales-empty">등록된 매출 구간 목표가 없습니다.</div>';
  $('#salesPeriods').innerHTML=salesTargets.map(p=>{const actual=dailySales.filter(x=>x.sales_date>=p.start_date&&x.sales_date<=p.end_date).reduce((s,x)=>s+Number(x.amount||0),0),pct=Math.min(100,Math.round(actual/Number(p.target_amount)*100)),on=active?.id===p.id;return `<article class="period-card ${on?'active':''}"><small>${esc(p.start_date.slice(5).replace('-','/'))}–${esc(p.end_date.slice(5).replace('-','/'))}</small><b>${esc(p.period_name)}</b><div class="numbers"><span>${money(actual)}</span><span>목표 ${money(p.target_amount)}</span></div><div class="bar"><i style="width:${pct}%"></i></div><small style="margin-top:5px">${pct}% 달성</small></article>`}).join('');
  $('#salesRecent').innerHTML=dailySales.length?dailySales.slice(0,7).map(x=>`<div class="sales-row"><b>${esc(x.sales_date.slice(5).replace('-','/'))}</b><span>${esc(x.note||'메모 없음')}</span><strong>${money(x.amount)}</strong></div>`).join(''):'<div class="sales-empty">아직 입력된 일매출이 없습니다. 관리자가 오늘 매출을 입력하면 여기에 표시돼요.</div>';
+}
+function subscribeOffice(){
+ if(officeChannel)return;
+ officeChannel=supabase.channel('virtual-office-team').on('postgres_changes',{event:'UPDATE',schema:'public',table:'team_members'},payload=>{const next=payload.new,current=members.find(x=>x.email===next.email);if(!current)return;const avatarChanged=current.avatar_path!==next.avatar_path;Object.assign(current,next);if(member.email===next.email)Object.assign(member,next);if(avatarChanged)loadAvatarUrls().then(renderOffice);else renderOffice()}).subscribe();
 }
 async function loadAvatarUrls(){
  avatarUrls={};
