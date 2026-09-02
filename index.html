@@ -11,6 +11,8 @@
 .nav button{display:block;width:100%;padding:11px;border:0;border-radius:11px;background:transparent;color:#bcd0c5;text-align:left}.nav button.active{background:#28533f;color:#fff}.view{animation:fade .18s ease}@keyframes fade{from{opacity:.3;transform:translateY(3px)}}.kpi-row,.hall-row{display:grid;grid-template-columns:42px 1fr 2fr 90px;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--line)}.rank{font-size:18px;font-weight:950;color:#1d7b55}.calendar-nav{display:flex;justify-content:center;gap:16px;align-items:center;margin:12px}.calendar-week,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr)}.calendar-week span{padding:8px;text-align:center;color:var(--muted);font-size:9px;font-weight:900}.day{min-height:105px;padding:7px;border:1px solid #edf0ed;background:#fff}.day.off{background:#f6f7f5;color:#a8afa9}.day b{font-size:10px}.event-chip{display:block;width:100%;margin-top:5px;padding:5px;border:0;border-radius:6px;background:#e8f3ec;color:#20563d;text-align:left;font-size:8px}.event-chip.promotion{background:#fff0e7;color:#98491f}@media(max-width:700px){.kpi-row,.hall-row{grid-template-columns:34px 1fr 70px}.kpi-row .detail,.hall-row .detail{display:none}.day{min-height:75px}.event-chip{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 
 .sales-board{margin:14px 0 18px;padding:20px;border:1px solid var(--line);border-radius:18px;background:#fff}.sales-board .card-head{margin-bottom:14px}.period-summary{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;margin-bottom:12px;border-radius:14px;background:#eef6f0}.period-summary strong{display:block;font-size:20px;letter-spacing:-.04em}.period-summary .right{text-align:right}.period-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.period-card{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fafbf9}.period-card.active{border-color:#5c956f;background:#f1f8f3;box-shadow:inset 0 0 0 1px #5c956f}.period-card small{display:block;color:var(--muted);font-size:10px}.period-card b{display:block;margin:6px 0 5px}.period-card .numbers{display:flex;justify-content:space-between;font-size:11px}.period-card .bar{margin-top:7px}.sales-recent{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}.sales-row{display:grid;grid-template-columns:90px 1fr auto;gap:10px;padding:8px 2px;border-bottom:1px solid #edf0ed;font-size:12px}.sales-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:1050px){.period-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.period-grid{grid-template-columns:1fr}.period-summary{align-items:flex-start;flex-direction:column}.period-summary .right{text-align:left}.sales-row{grid-template-columns:75px 1fr}}
+
+.office{background:#071b25;color:#eafffb;border-radius:22px;padding:18px}.office-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}.office-card{border:1px solid #24505a;border-radius:17px;background:#0d2934;padding:16px}.office-card h3{margin:2px 0 12px}.office-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:#6cf1d2}.office-floor{position:relative;min-height:390px;border:1px solid #285762;border-radius:15px;overflow:hidden;background-color:#0a2630;background-image:linear-gradient(#1d414755 1px,transparent 1px),linear-gradient(90deg,#1d414755 1px,transparent 1px);background-size:28px 28px}.office-zone{position:absolute;padding:10px 12px;border:1px solid #34717a;border-radius:13px;background:#103943;color:#bffcef;font-size:11px}.zone-focus{left:5%;top:8%}.zone-meeting{right:5%;bottom:8%}.zone-lounge{right:5%;top:8%}.office-avatar{position:absolute;width:54px;text-align:center;transform:translate(-50%,-50%)}.office-avatar .orb{display:grid;place-items:center;width:44px;height:44px;margin:auto;border:4px solid #75efd2;border-radius:50%;background:#176852;font-weight:950;font-size:17px;box-shadow:0 0 17px #65f0cf66}.office-avatar.me .orb{border-color:#b796ff;background:#5a4291}.office-avatar small{display:block;margin-top:4px;font-size:9px;white-space:nowrap}.roster-row{display:grid;grid-template-columns:34px 1fr auto;gap:9px;align-items:center;padding:8px 0;border-bottom:1px solid #1b4049}.roster-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#24515b;font-weight:900}.quest-layout{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-top:12px}.quest-row{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #1c414a}.quest-check{appearance:none;width:22px;height:22px;border:1px solid #4c7680;border-radius:7px;background:transparent}.quest-check:checked{border-color:#70f0d2;background:#70f0d2}.quest-check:checked:after{content:'✓';display:block;text-align:center;color:#09242c;font-weight:950}.quest-row.done .quest-title{text-decoration:line-through;color:#7fa19f}.xp-badge{display:grid;place-items:center;width:72px;height:72px;border-radius:20px;background:linear-gradient(145deg,#a98cff,#4c3e9e);font-size:24px;font-weight:950}.xp-line{display:flex;align-items:center;gap:14px}.office .bar{background:#183b44}.office .bar i{background:#73eed6}@media(max-width:900px){.office-grid,.quest-layout{grid-template-columns:1fr}.office-floor{min-height:500px}}
 </style>
 </head>
 <body>
@@ -35,6 +37,7 @@
 <div class="workspace">OLLOCDAM · 15 MEMBERS</div>
 <nav class="nav">
 <button class="active" data-view="home">⌂ <span>팀 홈</span></button>
+<button data-view="office">◈ <span>Virtual Office</span></button>
 <button data-view="kpi">◎ <span>주간 KPI</span></button>
 <button data-view="hall">♜ <span>명예의 전당</span></button>
 <button data-view="leave">◫ <span>연차 캘린더</span></button>
@@ -131,6 +134,13 @@
 </aside>
 </section>
 </div>
+<div id="officeView" class="view hidden">
+<section class="office">
+<div class="office-grid"><article class="office-card"><div class="office-label">VIRTUAL FLOOR · SAMSIN P-MKT</div><h3>Quest Studio</h3><div id="officeFloor" class="office-floor"></div></article>
+<aside class="office-card"><div class="office-label">TEAM ROSTER</div><h3>지금 이 공간</h3><div id="officeRoster"></div></aside></div>
+<div class="quest-layout"><article class="office-card"><div class="office-label">PERSONAL QUEST LOG</div><h3>오늘의 업무</h3><div id="myQuests"></div></article>
+<aside class="office-card"><div class="office-label">ADVENTURER STATUS</div><h3>이번 주 성장</h3><div id="xpStatus"></div></aside></div>
+</section></div>
 <div id="kpiView" class="view hidden"><section class="card"><div class="card-head"><div><div class="section">WEEKLY KPI</div><h3>팀 주간 KPI 현황</h3></div></div><div id="kpiTable"></div></section></div>
 <div id="hallView" class="view hidden"><section class="card"><div class="card-head"><div><div class="section">HALL OF FAME</div><h3>이번 주 퀘스트 랭킹</h3></div></div><div id="hallList"></div></section></div>
 <div id="calendarView" class="view hidden"><section class="card"><div class="card-head"><div><div class="section" id="calendarSection">TEAM CALENDAR</div><h3 id="calendarTitle">연차 캘린더</h3></div><button id="addEvent" class="btn primary">＋ 일정 추가</button></div><div class="calendar-nav"><button id="prevMonth" class="btn">‹</button><b id="calendarMonth"></b><button id="nextMonth" class="btn">›</button></div><div class="calendar-week"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div id="calendarGrid" class="calendar-grid"></div></section></div>
@@ -241,7 +251,7 @@
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 const supabase=createClient('https://hpbccidrxsdsaptjvwww.supabase.co','sb_publishable_Ia5lQq7LnL15Q-xoin3SMA_cFYj3p7r');
 const $=s=>document.querySelector(s);
-let me,member,updates=[],mission,members=[],comments=[],helps=[],events=[],dailySales=[],salesTargets=[],monthlySalesTarget=null,activeEmail,editingEmail,currentView='home',calendarDate=new Date();
+let me,member,updates=[],mission,members=[],comments=[],helps=[],events=[],dailySales=[],salesTargets=[],monthlySalesTarget=null,taskItems=[],activeEmail,editingEmail,currentView='home',calendarDate=new Date();
 const weekStart=()=>{const d=new Date(),day=d.getDay()||7;d.setHours(12,0,0,0);d.setDate(d.getDate()-day+1);return d.toISOString().slice(0,10)};
 const monthStart=()=>{const d=new Date();return ymd(new Date(d.getFullYear(),d.getMonth(),1))};
 const monthEnd=()=>{const d=new Date();return ymd(new Date(d.getFullYear(),d.getMonth()+1,0))};
@@ -254,7 +264,7 @@ async function load(){
  const{data:m}=await supabase.from('team_members').select('*').eq('email',me.email.toLowerCase()).single();
  if(!m){await supabase.auth.signOut();$('#loginError').textContent='등록되지 않은 계정입니다.';return}
  member=m;
- const [{data:u},{data:mi},{data:tm},{data:c},{data:h},{data:ev},{data:ds},{data:st},{data:mst}]=await Promise.all([
+ const [{data:u},{data:mi},{data:tm},{data:c},{data:h},{data:ev},{data:ds},{data:st},{data:mst},{data:ti}]=await Promise.all([
   supabase.from('weekly_updates').select('*').eq('week_start',weekStart()).order('updated_at',{ascending:false}),
   supabase.from('team_missions').select('*').eq('week_start',weekStart()).maybeSingle(),
   supabase.from('team_members').select('*').order('role'),
@@ -263,9 +273,10 @@ async function load(){
   supabase.from('shared_calendar_events').select('*').order('start_date'),
   supabase.from('daily_sales').select('*').gte('sales_date',monthStart()).lte('sales_date',monthEnd()).order('sales_date',{ascending:false}),
   supabase.from('sales_period_targets').select('*').gte('start_date',monthStart()).lte('end_date',monthEnd()).order('sort_order'),
-  supabase.from('monthly_sales_targets').select('*').eq('month_start',monthStart()).maybeSingle()
+  supabase.from('monthly_sales_targets').select('*').eq('month_start',monthStart()).maybeSingle(),
+  supabase.from('weekly_task_items').select('*').order('week_start',{ascending:false}).order('sort_order')
  ]);
- updates=u||[];mission=mi;members=tm||[];comments=c||[];helps=h||[];events=ev||[];dailySales=ds||[];salesTargets=st||[];monthlySalesTarget=mst||null;
+ updates=u||[];mission=mi;members=tm||[];comments=c||[];helps=h||[];events=ev||[];dailySales=ds||[];salesTargets=st||[];monthlySalesTarget=mst||null;taskItems=ti||[];
  render();$('#login').classList.add('hidden');$('#app').classList.remove('hidden');
  if(member.must_change_password)$('#passwordModal').classList.remove('hidden');
 }
@@ -275,7 +286,7 @@ function render(){
  $('#hello').textContent=`좋은 오후예요, ${member.name}님 👋`;$('#myTitle').textContent=`${member.name}님의 KPI`;
  $('#updatedCount').textContent=updates.length;$('#updatePill').textContent=`${updates.length} UPDATED`;
  $('#average').textContent=`${Math.round(updates.reduce((a,x)=>a+x.progress,0)/(updates.length||1))}%`;$('#helpCount').textContent=openHelps.length;
- renderSales();
+ renderSales();renderOffice();
  $('#openMission').classList.toggle('hidden',!member.is_admin);$('#openSales').classList.toggle('hidden',!member.is_admin);
  $('#myKpi').textContent=mine?.kpi||'아직 업데이트가 없어요.';$('#myBar').style.width=(mine?.progress||0)+'%';$('#myProgress').textContent=(mine?.progress||0)+'%';$('#myTasks').innerHTML=(mine?.tasks||[]).map(t=>`<div class="task">✓ ${esc(t)}</div>`).join('');$('#adminBox').classList.toggle('hidden',!member.is_admin);
  const colors=['#dff55b','#b8e6ff','#ffd3a3','#c9bcff','#ffb7c6','#b7e6c9'];
@@ -312,6 +323,22 @@ function renderSales(){
  $('#salesPeriods').innerHTML=salesTargets.map(p=>{const actual=dailySales.filter(x=>x.sales_date>=p.start_date&&x.sales_date<=p.end_date).reduce((s,x)=>s+Number(x.amount||0),0),pct=Math.min(100,Math.round(actual/Number(p.target_amount)*100)),on=active?.id===p.id;return `<article class="period-card ${on?'active':''}"><small>${esc(p.start_date.slice(5).replace('-','/'))}–${esc(p.end_date.slice(5).replace('-','/'))}</small><b>${esc(p.period_name)}</b><div class="numbers"><span>${money(actual)}</span><span>목표 ${money(p.target_amount)}</span></div><div class="bar"><i style="width:${pct}%"></i></div><small style="margin-top:5px">${pct}% 달성</small></article>`}).join('');
  $('#salesRecent').innerHTML=dailySales.length?dailySales.slice(0,7).map(x=>`<div class="sales-row"><b>${esc(x.sales_date.slice(5).replace('-','/'))}</b><span>${esc(x.note||'메모 없음')}</span><strong>${money(x.amount)}</strong></div>`).join(''):'<div class="sales-empty">아직 입력된 일매출이 없습니다. 관리자가 오늘 매출을 입력하면 여기에 표시돼요.</div>';
 }
+function renderOffice(){
+ const weekTasks=taskItems.filter(x=>x.week_start===weekStart()),mine=weekTasks.filter(x=>x.member_email===member.email),done=mine.filter(x=>x.completed).length;
+ const totalXp=taskItems.filter(x=>x.member_email===member.email&&x.completed).reduce((s,x)=>s+Number(x.points||20),0),level=Math.floor(totalXp/200)+1,next=totalXp%200;
+ const positions=[[18,28],[38,20],[58,30],[78,22],[28,54],[50,52],[72,55],[16,78],[40,76],[62,79],[84,75],[35,38],[65,42],[50,66],[82,42]];
+ $('#officeFloor').innerHTML='<div class="office-zone zone-focus">⌁ 집중 스튜디오</div><div class="office-zone zone-lounge">☕ 로비</div><div class="office-zone zone-meeting">◇ 회의실</div>'+members.map((m,i)=>{const u=updates.find(x=>x.member_email===m.email),p=positions[i%positions.length],status=u?.status==='meeting'?'회의 중':u?.status==='available'?'대화 가능':'집중 중';return `<div class="office-avatar ${m.email===member.email?'me':''}" style="left:${p[0]}%;top:${p[1]}%"><div class="orb">${esc(m.name.slice(-1))}</div><small><b>${esc(m.name)}</b><br>${status}</small></div>`}).join('');
+ $('#officeRoster').innerHTML=members.map(m=>{const xp=taskItems.filter(x=>x.member_email===m.email&&x.completed).reduce((s,x)=>s+Number(x.points||20),0),u=updates.find(x=>x.member_email===m.email);return `<div class="roster-row"><span class="roster-icon">${esc(m.name.slice(-1))}</span><span><b>${esc(m.name)}</b><small style="display:block;color:#83a9a6">${esc(u?.kpi||'퀘스트 준비 중')}</small></span><b>${xp} XP</b></div>`}).join('');
+ $('#myQuests').innerHTML=mine.length?mine.map(t=>`<label class="quest-row ${t.completed?'done':''}"><input class="quest-check" type="checkbox" data-task-check="${t.id}" ${t.completed?'checked':''}><span><b class="quest-title">${esc(t.title)}</b><small style="display:block;color:#7fa9a5">완료 보상 · ${t.points} XP</small></span><b>${t.completed?'완료':'진행'}</b></label>`).join(''):'<div class="sales-empty">주간 업데이트에서 할 일을 등록하면 퀘스트가 생성돼요.</div>';
+ $('#xpStatus').innerHTML=`<div class="xp-line"><div class="xp-badge">LV.<br>${level}</div><div><b style="font-size:24px">${totalXp} XP</b><small style="display:block;color:#8eb0ad">퀘스트를 완료하며 경험치를 모아요.</small></div></div><div style="margin-top:18px"><div class="progress-copy"><span>다음 레벨까지</span><b>${next}/200 XP</b></div><div class="bar"><i style="width:${next/2}%"></i></div><div class="progress-copy" style="margin-top:14px"><span>이번 주 퀘스트</span><b>${done}/${mine.length}</b></div></div>`;
+ document.querySelectorAll('[data-task-check]').forEach(box=>box.onchange=()=>toggleTask(box.dataset.taskCheck,box.checked));
+}
+async function toggleTask(id,completed){
+ const task=taskItems.find(x=>x.id===id);if(!task||task.member_email!==member.email)return;
+ const {error}=await supabase.from('weekly_task_items').update({completed,completed_at:completed?new Date().toISOString():null,updated_at:new Date().toISOString()}).eq('id',id).eq('member_email',member.email);
+ if(error){alert('퀘스트 저장에 실패했어요: '+error.message);await load();return}
+ task.completed=completed;task.completed_at=completed?new Date().toISOString():null;renderOffice();
+}
 function renderSecondary(){
  const sorted=[...members].sort((a,b)=>(updates.find(x=>x.member_email===b.email)?.progress||0)-(updates.find(x=>x.member_email===a.email)?.progress||0));
  $('#kpiTable').innerHTML=sorted.map((m,i)=>{const u=updates.find(x=>x.member_email===m.email);return `<div class="kpi-row"><span class="rank">${i+1}</span><b>${esc(m.name)}</b><span class="detail">${esc(u?.kpi||'업데이트 전')}</span><b>${u?.progress||0}%</b></div>`}).join('');
@@ -320,7 +347,7 @@ function renderSecondary(){
 }
 function switchView(view){
  currentView=view;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
- const id=view==='home'?'homeView':view==='kpi'?'kpiView':view==='hall'?'hallView':'calendarView';$('#'+id).classList.remove('hidden');
+ const id=view==='home'?'homeView':view==='office'?'officeView':view==='kpi'?'kpiView':view==='hall'?'hallView':'calendarView';$('#'+id).classList.remove('hidden');
  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
  if(view==='leave'||view==='promotion'){$('#calendarTitle').textContent=view==='leave'?'연차 캘린더':'프로모션 캘린더';renderCalendar()}
 }
@@ -341,10 +368,10 @@ function renderComments(){const list=comments.filter(x=>x.target_email===activeE
 async function resolveHelp(id){await supabase.from('help_requests').update({status:'resolved',resolved_at:new Date().toISOString()}).eq('id',id);await load()}
 $('#loginForm').onsubmit=async e=>{e.preventDefault();$('#loginError').textContent='';const f=new FormData(e.currentTarget),{error}=await supabase.auth.signInWithPassword({email:String(f.get('email')).toLowerCase(),password:String(f.get('password'))});if(error)$('#loginError').textContent='이메일 또는 비밀번호를 확인해 주세요.';else load()};
 $('#logout').onclick=async()=>{await supabase.auth.signOut();location.reload()};
-function openKpi(email){editingEmail=email;const target=members.find(x=>x.email===email),mine=updates.find(x=>x.member_email===email),f=$('#updateForm');$('#updateTitle').textContent=email===member.email?'이번 주 업무 공유':`${target?.name||''}님 주간 KPI 설정`;f.kpi.value=mine?.kpi||'';f.progress.value=mine?.progress||0;f.tasks.value=(mine?.tasks||[]).join('\n');f.blocker.value=mine?.blocker||'';f.status.value=mine?.status||'focus';$('#updateModal').classList.remove('hidden')}
+function openKpi(email){editingEmail=email;const target=members.find(x=>x.email===email),mine=updates.find(x=>x.member_email===email),f=$('#updateForm');$('#updateTitle').textContent=email===member.email?'이번 주 업무 공유':`${target?.name||''}님 주간 KPI 설정`;f.kpi.value=mine?.kpi||'';f.progress.value=mine?.progress||0;f.tasks.value=(taskItems.filter(x=>x.member_email===email&&x.week_start===weekStart()).map(x=>x.title).length?taskItems.filter(x=>x.member_email===email&&x.week_start===weekStart()).map(x=>x.title):(mine?.tasks||[])).join('\n');f.blocker.value=mine?.blocker||'';f.status.value=mine?.status||'focus';$('#updateModal').classList.remove('hidden')}
 $('#openUpdate').onclick=()=>openKpi(member.email);
 $('#closeUpdate').onclick=$('#cancelUpdate').onclick=()=>$('#updateModal').classList.add('hidden');
-$('#updateForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);await supabase.from('weekly_updates').upsert({member_email:editingEmail,week_start:weekStart(),kpi:f.get('kpi'),progress:Number(f.get('progress')),tasks:String(f.get('tasks')).split('\n').filter(Boolean),blocker:f.get('blocker'),status:f.get('status'),updated_at:new Date().toISOString()},{onConflict:'member_email,week_start'});$('#updateModal').classList.add('hidden');await load()};
+$('#updateForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget),titles=String(f.get('tasks')).split('\n').map(x=>x.trim()).filter(Boolean),oldTasks=taskItems.filter(x=>x.member_email===editingEmail&&x.week_start===weekStart()),oldByTitle=new Map(oldTasks.map(x=>[x.title,x]));const {error:updateError}=await supabase.from('weekly_updates').upsert({member_email:editingEmail,week_start:weekStart(),kpi:f.get('kpi'),progress:Number(f.get('progress')),tasks:titles,blocker:f.get('blocker'),status:f.get('status'),updated_at:new Date().toISOString()},{onConflict:'member_email,week_start'});if(updateError){alert('업데이트 저장에 실패했어요: '+updateError.message);return}const {error:deleteError}=await supabase.from('weekly_task_items').delete().eq('member_email',editingEmail).eq('week_start',weekStart());if(deleteError){alert('퀘스트 갱신에 실패했어요: '+deleteError.message);return}if(titles.length){const rows=titles.map((title,i)=>{const old=oldByTitle.get(title);return {member_email:editingEmail,week_start:weekStart(),title,sort_order:i+1,points:old?.points||20,completed:old?.completed||false,completed_at:old?.completed_at||null,updated_at:new Date().toISOString()}}),{error:taskError}=await supabase.from('weekly_task_items').insert(rows);if(taskError){alert('퀘스트 생성에 실패했어요: '+taskError.message);return}}$('#updateModal').classList.add('hidden');await load()};
 $('#openSales').onclick=()=>{const form=$('#salesForm'),today=ymd(new Date()),existing=dailySales.find(x=>x.sales_date===today);form.sales_date.value=today;form.amount.value=existing?.amount||'';form.note.value=existing?.note||'';$('#salesModal').classList.remove('hidden')};
 $('#closeSales').onclick=$('#cancelSales').onclick=()=>$('#salesModal').classList.add('hidden');
 $('#salesForm').onsubmit=async e=>{e.preventDefault();const form=new FormData(e.currentTarget),salesDate=String(form.get('sales_date'));const {error}=await supabase.from('daily_sales').upsert({sales_date:salesDate,amount:Number(form.get('amount')),note:String(form.get('note')||''),entered_by:member.email,updated_at:new Date().toISOString()},{onConflict:'sales_date'});if(error){alert('매출 저장에 실패했어요: '+error.message);return}$('#salesModal').classList.add('hidden');await load()};
