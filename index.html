@@ -43,6 +43,23 @@
 .influencer-kpi-simple .influencer-member-card{min-height:165px}
 .sync-note{display:inline-flex;align-items:center;gap:6px;color:#35735a;font-size:11px;font-weight:800}
 @media(max-width:900px){.influencer-kpi-simple{grid-template-columns:1fr}.notion-head{align-items:flex-start;flex-direction:column}.notion-frame{min-height:520px;height:68vh}}
+
+/* Navigation and workspace IA */
+.home-calendar-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.home-calendar-card{padding:20px}
+.upcoming-list{display:grid;gap:8px;margin-top:12px}
+.upcoming-item{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fafcf9}
+.upcoming-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.upcoming-item span{min-width:0;flex:1}.upcoming-item small{display:block;color:var(--muted)}
+.quest-part-tabs,.personal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.quest-part-tab{border:1px solid var(--line);background:#fff;padding:11px 17px;border-radius:999px;font-weight:900}
+.quest-part-tab.active{background:var(--g);color:#fff;border-color:var(--g)}
+.personal-hero{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;padding:22px;margin-bottom:14px}
+.personal-avatar{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#eef5ee;border:4px solid #dce8dc;font-size:28px;overflow:hidden}
+.personal-avatar img{width:100%;height:100%;object-fit:cover}
+.personal-kpi-card{padding:20px;margin-bottom:14px}
+#archiveMember{display:none}
+@media(max-width:800px){.home-calendar-grid{grid-template-columns:1fr}.personal-hero{grid-template-columns:auto 1fr}.personal-actions{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -68,13 +85,9 @@
 <nav class="nav">
 <button class="active" data-view="home">⌂ <span>팀 홈</span></button>
 <button data-view="office">◈ <span>Virtual Office</span></button>
-<button data-view="kpi">◎ <span>주간 KPI</span></button>
-<button data-view="archive">▤ <span>업무 아카이브</span></button>
-<button data-view="influencer">📣 <span>인플마 파트</span></button>
+<button data-view="quests">⚔ <span>주간 퀘스트</span></button>
+<button data-view="mypage">▤ <span>내 페이지</span></button>
 <button data-view="game">⚡ <span>팀 게임</span></button>
-<button data-view="hall">♜ <span>명예의 전당</span></button>
-<button data-view="leave">◫ <span>연차 캘린더</span></button>
-<button data-view="promotion">◆ <span>프로모션 캘린더</span></button>
 </nav>
 <div class="user">
 <b id="sideName">
@@ -168,6 +181,10 @@
 </div>
 </aside>
 </section>
+<section class="home-calendar-grid">
+<article class="card home-calendar-card"><div class="card-head"><div><div class="section">LEAVE CALENDAR</div><h3>연차 캘린더</h3></div><button class="btn" data-calendar-open="leave">전체보기 · 편집</button></div><div id="homeLeaveEvents" class="upcoming-list"></div></article>
+<article class="card home-calendar-card"><div class="card-head"><div><div class="section">PROMOTION CALENDAR</div><h3>프로모션 캘린더</h3></div><button class="btn" data-calendar-open="promotion">전체보기 · 편집</button></div><div id="homePromoEvents" class="upcoming-list"></div></article>
+</section>
 </div>
 <div id="officeView" class="view hidden">
 <section class="office">
@@ -178,37 +195,46 @@
 <aside class="office-card"><div class="office-label">ADVENTURER STATUS</div><h3>이번 주 성장</h3><div id="xpStatus"></div></aside></div>
 </section></div>
 
-<div id="influencerView" class="view hidden">
+<div id="questsView" class="view hidden">
+<div class="quest-part-tabs"><button class="quest-part-tab active" data-quest-part="performance">📈 퍼포마 파트</button><button class="quest-part-tab" data-quest-part="influencer">📣 인플마 파트</button></div>
+<div id="performanceQuestPane">
+<section class="game-hero"><article class="game-card game-dark"><div class="label">PERFORMANCE MARKETING QUEST</div><h2>A셀 · B셀 소재 기획 레이스</h2><p class="muted">인당 5개, 셀당 20개 소재를 완성하면 셀 미션 클리어!</p><div id="cellSummary" style="margin-top:16px"></div></article></section>
+<section class="game-grid">
+<article class="game-card"><div class="card-head"><div><div class="section">CELL QUESTS</div><h3>셀 소재 기획 보드</h3></div><button id="addCellQuest" class="btn primary">＋ 소재 추가</button></div><div id="cellQuestBoard"></div></article>
+<article class="game-card"><div class="card-head"><div><div class="section">HELP QUESTS</div><h3>도움 요청도 함께 깨는 퀘스트</h3></div><button id="gameHelp" class="btn help">🙋 요청</button></div><div id="helpQuestBoard"></div></article>
+<article class="game-card"><div class="card-head"><div><div class="section">DIFFICULTY & XP</div><h3>퀘스트 난이도 설정</h3></div><div class="tiny-actions"><span class="pill">파트장 · 팀장</span><button id="toggleDifficulty" class="btn collapse-toggle">펼치기</button></div></div><div id="difficultyCollapse" class="collapsible-body hidden"><div id="difficultyBoard"></div></div></article>
+</section>
+<section id="adminBriefing" class="game-card" style="margin-top:14px"><div class="card-head"><div><div class="section">WEEKLY LEAD BRIEFING</div><h3>관리자 주간 브리핑</h3></div><span class="pill">파트장 · 팀장</span></div><div id="briefingContent"></div></section>
+</div>
+<div id="influencerQuestPane" class="hidden">
 <section class="card notion-shell">
-<div class="notion-head"><div><div class="section">INFLUENCER MARKETING WORKSPACE</div><h2>인플마 파트 업무</h2><p class="muted">컨택 기록은 노션에서 한곳에 관리하고, 대시보드에서는 바로 확인해요.</p></div><a class="btn primary" href="https://app.notion.com/p/samsin-brandstudio/31e600a3dab580af81d0f585c7d2e910?source=copy_link" target="_blank" rel="noopener noreferrer">노션에서 크게 보기 ↗</a></div>
+<div class="notion-head"><div><div class="section">INFLUENCER MARKETING WORKSPACE</div><h2>인플마 파트 업무</h2><p class="muted">인플마 업무 기록은 노션에서 관리하고, 주간 KPI는 아래에서 확인해요.</p></div><a class="btn primary" href="https://app.notion.com/p/samsin-brandstudio/31e600a3dab580af81d0f585c7d2e910?source=copy_link" target="_blank" rel="noopener noreferrer">노션에서 크게 보기 ↗</a></div>
 <iframe class="notion-frame" src="https://app.notion.com/p/samsin-brandstudio/31e600a3dab580af81d0f585c7d2e910?source=copy_link" title="SAMSIN 인플루언서 마케팅 노션" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-<div class="notion-fallback">노션 화면이 보이지 않으면 위 ‘노션에서 크게 보기’를 이용해 주세요. 노션 페이지를 웹에 게시한 뒤 notion.site 주소로 바꾸면 로그인 없이도 임베드할 수 있어요.</div>
+<div class="notion-fallback">노션 화면이 보이지 않으면 ‘노션에서 크게 보기’를 이용해 주세요.</div>
 </section>
 <section class="card" style="margin-top:14px"><div class="card-head"><div><div class="section">WEEKLY KPI</div><h3>인플마 주간 KPI 설정</h3></div><span class="pill">박소연 파트장 · 팀장</span></div><div id="influencerSummary" class="influencer-summary"></div><div id="influencerMemberGrid" class="influencer-kpi-simple"></div></section>
 </div>
+</div>
 
 <div id="gameView" class="view hidden">
-<div class="game-tabs"><button class="game-tab active" data-game-tab="quests">⚔️ 퀘스트</button><button class="game-tab" data-game-tab="rewards">🎁 보상</button><button class="game-tab" data-game-tab="social">💚 칭찬·회고</button></div>
-<div id="performanceGamePane">
+<div class="game-tabs"><button class="game-tab active" data-game-tab="hall">♜ 명예의 전당</button><button class="game-tab" data-game-tab="rewards">🎁 보상</button><button class="game-tab" data-game-tab="social">💚 칭찬·회고</button></div>
+<section class="game-card" data-game-section="hall"><div class="card-head"><div><div class="section">HALL OF FAME</div><h3>이번 주 퀘스트 랭킹</h3></div></div><div id="hallList"></div></section>
 <section class="game-hero">
-<article class="game-card game-dark" data-game-section="quests"><div class="label">CELL CONTENT MISSION</div><h2>A셀 · B셀 소재 기획 레이스</h2><p class="muted">인당 5개, 셀당 20개 소재를 완성하면 셀 미션 클리어!</p><div id="cellSummary" style="margin-top:16px"></div></article>
 <article class="game-card hidden" data-game-section="rewards"><div class="section">MY WALLET</div><h2 id="walletXp">0 XP</h2><div id="myBadges" class="badge-row"></div></article>
 </section>
 <section class="game-grid">
-<article class="game-card" data-game-section="quests"><div class="card-head"><div><div class="section">CELL QUESTS</div><h3>셀 소재 기획 보드</h3></div><button id="addCellQuest" class="btn primary">＋ 소재 추가</button></div><div id="cellQuestBoard"></div></article>
-<article class="game-card" data-game-section="quests"><div class="card-head"><div><div class="section">HELP QUESTS</div><h3>도움 요청도 함께 깨는 퀘스트</h3></div><button id="gameHelp" class="btn help">🙋 요청</button></div><div id="helpQuestBoard"></div></article>
-<article class="game-card" data-game-section="quests"><div class="card-head"><div><div class="section">DIFFICULTY & XP</div><h3>퀘스트 난이도 설정</h3></div><div class="tiny-actions"><span class="pill">파트장 · 팀장</span><button id="toggleDifficulty" class="btn collapse-toggle">펼치기</button></div></div><div id="difficultyCollapse" class="collapsible-body hidden"><div id="difficultyBoard"></div></div></article>
 <article class="game-card hidden" data-game-section="rewards"><div class="card-head"><div><div class="section">REWARD SHOP</div><h3>XP 꾸미기 상점</h3></div><span id="shopBalance" class="pill">0 XP</span></div><div id="rewardShop" class="shop-grid"></div></article>
 <article class="game-card hidden" data-game-section="social"><div class="card-head"><div><div class="section">KUDOS & BADGES</div><h3>칭찬 카드 보내기</h3></div></div><form id="kudosForm"><label class="field">칭찬할 팀원<select name="receiver" required></select></label><label class="field">칭찬 메시지<textarea name="message" rows="2" maxlength="200" required></textarea></label><label class="field">칭찬 코인<select name="coins"><option value="1">1코인 · +5 XP</option><option value="2">2코인 · +10 XP</option><option value="3">3코인 · +15 XP</option></select></label><button class="btn primary">칭찬 카드 보내기</button></form><div id="kudosFeed"></div></article>
 <article class="game-card hidden" data-game-section="social"><div class="card-head"><div><div class="section">FRIDAY RECAP</div><h3>이번 주 자동 회고 카드</h3></div><span class="friday-tag">매주 금요일 공개</span></div><div id="weeklyRecap"></div></article>
 </section>
-
-</div>
 </div>
 
-<div id="archiveView" class="view hidden"><section class="card"><div class="card-head"><div><div class="section">WEEKLY WORK ARCHIVE</div><h3>주간 업무 아카이브</h3></div><div class="archive-toolbar"><select id="archiveMember" aria-label="팀원 선택"></select><select id="archiveWeek" aria-label="주차 선택"></select></div></div><p class="muted">지난 업무와 완료 여부, 메모를 주차별로 확인할 수 있어요. 미완료 업무는 다음 주에 자동으로 이관됩니다.</p><div id="archiveSummary" class="archive-summary"></div><div id="archiveKpi"></div><div id="archiveList" class="archive-list"></div></section></div>
-<div id="kpiView" class="view hidden"><section class="card"><div class="card-head"><div><div class="section">WEEKLY KPI</div><h3>팀 주간 KPI 현황</h3></div><span class="sync-note">● 주간 업무 원본과 자동 동기화</span></div><div id="kpiTable"></div></section><section id="adminBriefing" class="game-card" style="margin-top:14px"><div class="card-head"><div><div class="section">WEEKLY LEAD BRIEFING</div><h3>관리자 주간 브리핑</h3></div><span class="pill">파트장 · 팀장</span></div><div id="briefingContent"></div></section></div>
-<div id="hallView" class="view hidden"><section class="card"><div class="card-head"><div><div class="section">HALL OF FAME</div><h3>이번 주 퀘스트 랭킹</h3></div></div><div id="hallList"></div></section></div>
+<div id="archiveView" class="view hidden">
+<section class="card personal-hero"><div id="myPageAvatar" class="personal-avatar"></div><div><div class="section">MY WORKSPACE</div><h2 id="myPageName">내 페이지</h2><p class="muted">KPI, 캐릭터와 지난 업무 기록을 한곳에서 관리해요.</p></div><div class="personal-actions"><button id="myPageCharacter" class="btn">👤 캐릭터 관리</button><button id="myPageUpdate" class="btn primary">✎ 이번 주 KPI 수정</button></div></section>
+<section class="card personal-kpi-card"><div class="card-head"><div><div class="section">THIS WEEK KPI</div><h3>이번 주 설정 KPI</h3></div><b id="myPageProgress">0%</b></div><h2 id="myPageKpi">아직 KPI가 없어요.</h2><div class="bar"><i id="myPageBar"></i></div></section>
+<section class="card"><div class="card-head"><div><div class="section">MY WORK ARCHIVE</div><h3>내 업무 아카이브</h3></div><div class="archive-toolbar"><select id="archiveMember" aria-label="팀원 선택"></select><select id="archiveWeek" aria-label="주차 선택"></select></div></div><p class="muted">지난 업무와 완료 여부, 메모를 주차별로 확인할 수 있어요. 미완료 업무는 다음 주에 자동으로 이관됩니다.</p><div id="archiveSummary" class="archive-summary"></div><div id="archiveKpi"></div><div id="archiveList" class="archive-list"></div></section>
+</div>
+<div id="kpiView" class="view hidden"><section class="card"><div class="card-head"><div><div class="section">WEEKLY KPI</div><h3>팀 주간 KPI 현황</h3></div></div><div id="kpiTable"></div></section></div>
 <div id="calendarView" class="view hidden"><section class="card"><div class="card-head"><div><div class="section" id="calendarSection">TEAM CALENDAR</div><h3 id="calendarTitle">연차 캘린더</h3></div><button id="addEvent" class="btn primary">＋ 일정 추가</button></div><div class="calendar-nav"><button id="prevMonth" class="btn">‹</button><b id="calendarMonth"></b><button id="nextMonth" class="btn">›</button></div><div class="calendar-week"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div id="calendarGrid" class="calendar-grid"></div></section></div>
 </main>
 </div>
@@ -232,8 +258,8 @@
 <div class="guide-step"><span>2</span><div><b>완료 체크하고 XP 받기</b><p>Virtual Office의 오늘의 업무에서 완료한 퀘스트를 체크하면 XP가 쌓여요.</p></div></div>
 <div class="guide-step"><span>3</span><div><b>상태와 캐릭터 설정</b><p>집중 중·대화 가능·회의 중 상태를 선택하면 캐릭터가 해당 공간으로 이동해요.</p></div></div>
 <div class="guide-step"><span>4</span><div><b>함께 소통하기</b><p>팀원 캐릭터를 눌러 댓글을 남기거나, 도움이 필요하면 도움 요청을 보내요.</p></div></div>
-<div class="guide-step"><span>5</span><div><b>팀 게임 즐기기</b><p>A/B셀 소재 퀘스트, 칭찬 카드, 뱃지와 XP 상점을 ‘팀 게임’에서 확인해요.</p></div></div>
-</div><div class="guide-tip">💡 프로모션·연차 캘린더는 모든 팀원이 직접 등록하고 수정할 수 있어요.</div>
+<div class="guide-step"><span>5</span><div><b>팀 게임 즐기기</b><p>퍼포마·인플마 업무는 ‘주간 퀘스트’에서, 명예의 전당과 보상·칭찬은 ‘팀 게임’에서 확인해요.</p></div></div>
+</div><div class="guide-tip">💡 팀 홈의 연차·프로모션 캘린더에서 모든 팀원이 일정을 등록하고 수정할 수 있어요.</div>
 <div class="actions"><button type="button" id="guideStart" class="btn primary">주간 업무 작성해 보기</button></div></div></div>
 <div id="updateModal" class="modal hidden">
 <form id="updateForm">
@@ -397,7 +423,7 @@ function render(){
  $('#hello').textContent=`좋은 오후예요, ${member.name}님 👋`;$('#myTitle').textContent=`${member.name}님의 KPI`;
  $('#updatedCount').textContent=updates.length;$('#updatePill').textContent=`${updates.length} UPDATED`;
  $('#average').textContent=`${Math.round(updates.reduce((a,x)=>a+x.progress,0)/(updates.length||1))}%`;$('#helpCount').textContent=openHelps.length;
- renderSales();renderOffice();renderGame();renderNotifications();
+ renderSales();renderOffice();renderGame();renderHomeCalendars();renderPersonal();renderNotifications();
  $('#openMission').classList.toggle('hidden',!member.is_admin);$('#openSales').classList.toggle('hidden',!member.is_admin);
  $('#myKpi').textContent=mine?.kpi||'아직 업데이트가 없어요.';$('#myBar').style.width=(mine?.progress||0)+'%';$('#myProgress').textContent=(mine?.progress||0)+'%';const myCurrentTasks=taskItems.filter(t=>t.member_email===member.email&&t.week_start===weekStart()).sort((a,b)=>a.sort_order-b.sort_order);$('#myTasks').innerHTML=myCurrentTasks.length?myCurrentTasks.map(t=>`<div class="task">${t.completed?'✓':'○'} ${esc(t.title)}${t.note?'<small style="display:block;color:var(--muted);margin-left:16px">📝 메모 있음</small>':''}</div>`).join(''):'<div class="empty">등록된 업무가 없어요.</div>';$('#adminBox').classList.toggle('hidden',!member.is_admin);
  const colors=['#dff55b','#b8e6ff','#ffd3a3','#c9bcff','#ffb7c6','#b7e6c9'];
@@ -424,6 +450,14 @@ function render(){
  document.querySelectorAll('[data-manage]').forEach(b=>b.onclick=()=>openKpi(b.dataset.manage));
  document.querySelectorAll('[data-resolve]').forEach(b=>b.onclick=()=>resolveHelp(b.dataset.resolve));
  renderSecondary();
+}
+function renderHomeCalendars(){
+ const today=ymd(new Date()),upcoming=type=>events.filter(e=>e.event_type===type&&e.end_date>=today).sort((a,b)=>a.start_date.localeCompare(b.start_date)).slice(0,5),html=type=>{const rows=upcoming(type);return rows.length?rows.map(e=>'<button type="button" class="upcoming-item" data-home-event="'+e.id+'" data-home-event-type="'+type+'"><i class="upcoming-dot" style="background:'+esc(e.color||'#5B8DEF')+'"></i><span><b>'+esc(e.title)+'</b><small>'+esc(e.start_date)+(e.end_date!==e.start_date?' ~ '+esc(e.end_date):'')+'</small></span></button>').join(''):'<div class="sales-empty">예정된 일정이 없어요.</div>'};
+ $('#homeLeaveEvents').innerHTML=html('leave');$('#homePromoEvents').innerHTML=html('promotion');
+ document.querySelectorAll('[data-home-event]').forEach(b=>b.onclick=()=>{switchView(b.dataset.homeEventType);openEvent(b.dataset.homeEvent)});
+}
+function renderPersonal(){
+ const mine=updates.find(x=>x.member_email===member.email);$('#myPageAvatar').innerHTML=avatarMarkup(member);$('#myPageName').textContent=member.name+'님의 워크스페이스';$('#myPageKpi').textContent=mine?.kpi||'아직 KPI가 없어요.';$('#myPageProgress').textContent=(mine?.progress||0)+'%';$('#myPageBar').style.width=(mine?.progress||0)+'%';
 }
 function renderSales(){
  const total=dailySales.reduce((sum,row)=>sum+Number(row.amount||0),0),target=Number(monthlySalesTarget?.target_amount||48),percent=target?Math.min(100,Math.round(total/target*100)):0;
@@ -540,7 +574,7 @@ function renderNotifications(){
 function salesCelebration(percent){const key=monthStart()+'-'+percent;if(percent<100||localStorage.getItem('sales-event')===key)return;localStorage.setItem('sales-event',key);const box=document.createElement('div');box.className='sales-celebration';box.innerHTML='<b>🎉 월 매출 목표 달성!</b>'+['🎊','✨','💚','🏆','🎉'].map((x,i)=>'<i class="confetti" style="left:'+(12+i*18)+'%;animation-delay:'+(i*.15)+'s">'+x+'</i>').join('');document.body.append(box);setTimeout(()=>box.remove(),2700)}
 
 function renderArchive(){
- if(!member)return;archiveEmail=archiveEmail||member.email;
+ if(!member)return;archiveEmail=member.email;
  const weeks=[...new Set(taskItems.map(t=>t.week_start))].sort().reverse();archiveWeek=weeks.includes(archiveWeek)?archiveWeek:(weeks.find(w=>w<weekStart())||weeks[0]||weekStart());
  $('#archiveMember').innerHTML=members.map(m=>'<option value="'+m.email+'">'+esc(m.name)+' · '+esc(m.role)+'</option>').join('');$('#archiveMember').value=archiveEmail;
  $('#archiveWeek').innerHTML=weeks.length?weeks.map(w=>'<option value="'+w+'">'+w+' 주차'+(w===weekStart()?' · 이번 주':'')+'</option>').join(''):'<option value="'+weekStart()+'">기록 없음</option>';$('#archiveWeek').value=archiveWeek;
@@ -558,7 +592,7 @@ function renderSecondary(){
 }
 function switchView(view){
  currentView=view;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
- const id=view==='home'?'homeView':view==='game'?'gameView':view==='influencer'?'influencerView':view==='archive'?'archiveView':view==='office'?'officeView':view==='kpi'?'kpiView':view==='hall'?'hallView':'calendarView';$('#'+id).classList.remove('hidden');
+ const id=view==='home'?'homeView':view==='office'?'officeView':view==='quests'?'questsView':view==='mypage'?'archiveView':view==='game'?'gameView':'calendarView';$('#'+id).classList.remove('hidden');
  
 $('#archiveMember').onchange=e=>{archiveEmail=e.target.value;renderArchive()};
 $('#archiveWeek').onchange=e=>{archiveWeek=e.target.value;renderArchive()};
@@ -611,6 +645,10 @@ $('#openMission').onclick=()=>{const f=$('#missionForm');f.title.value=mission?.
 $('#closeMission').onclick=$('#cancelMission').onclick=()=>$('#missionModal').classList.add('hidden');
 $('#missionForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);await supabase.from('team_missions').upsert({week_start:weekStart(),title:f.get('title'),current_value:Number(f.get('current_value')),target_value:Number(f.get('target_value')),unit:f.get('unit'),updated_at:new Date().toISOString()},{onConflict:'week_start'});$('#missionModal').classList.add('hidden');await load()};
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>switchView(b.dataset.view));
+document.querySelectorAll('[data-calendar-open]').forEach(b=>b.onclick=()=>switchView(b.dataset.calendarOpen));
+document.querySelectorAll('[data-quest-part]').forEach(b=>b.onclick=()=>{const part=b.dataset.questPart;document.querySelectorAll('[data-quest-part]').forEach(x=>x.classList.toggle('active',x===b));$('#performanceQuestPane').classList.toggle('hidden',part!=='performance');$('#influencerQuestPane').classList.toggle('hidden',part!=='influencer')});
+$('#myPageCharacter').onclick=()=>$('#openCharacter').click();
+$('#myPageUpdate').onclick=()=>openKpi(member.email);
 $('#openHelp').onclick=()=>{const h=helps.find(x=>x.member_email===member.email&&x.status==='open');$('#helpTarget').innerHTML=members.filter(x=>x.email!==member.email).map(x=>`<option value="${x.email}">${esc(x.name)} · ${esc(x.role)}</option>`).join('');$('#helpForm').requested_from_email.value=h?.requested_from_email||'';$('#helpForm').message.value=h?.message||'';$('#helpModal').classList.remove('hidden')};
 $('#closeHelp').onclick=$('#cancelHelp').onclick=()=>$('#helpModal').classList.add('hidden');
 $('#helpForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);await supabase.from('help_requests').upsert({member_email:member.email,requested_from_email:f.get('requested_from_email'),week_start:weekStart(),message:f.get('message'),status:'open',resolved_at:null},{onConflict:'member_email,week_start'});$('#helpModal').classList.add('hidden');await load()};
