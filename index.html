@@ -243,6 +243,7 @@
 </section>
 <section class="game-grid">
 <article class="game-card hidden" data-game-section="rewards"><div class="card-head"><div><div class="section">REWARD SHOP</div><h3>XP 꾸미기 상점</h3></div><span id="shopBalance" class="pill">0 XP</span></div><div id="rewardShop" class="shop-grid"></div></article>
+<article class="game-card hidden" data-game-section="rewards"><div class="card-head"><div><div class="section">MY REWARD COUPONS</div><h3>🎟 보상 쿠폰함</h3></div></div><div id="couponWallet"></div></article>
 <article class="game-card hidden" data-game-section="social"><div class="card-head"><div><div class="section">KUDOS & BADGES</div><h3>칭찬 카드 보내기</h3></div></div><form id="kudosForm"><label class="field">칭찬할 팀원<select name="receiver" required></select></label><label class="field">칭찬 메시지<textarea name="message" rows="2" maxlength="200" required></textarea></label><label class="field">칭찬 코인<select name="coins"><option value="1">1코인 · +5 XP</option><option value="2">2코인 · +10 XP</option><option value="3">3코인 · +15 XP</option></select></label><button class="btn primary">칭찬 카드 보내기</button></form><div id="kudosFeed"></div></article>
 <article class="game-card hidden" data-game-section="social"><div class="card-head"><div><div class="section">FRIDAY RECAP</div><h3>이번 주 자동 회고 카드</h3></div><span class="friday-tag">매주 금요일 공개</span></div><div id="weeklyRecap"></div></article>
 </section>
@@ -397,7 +398,7 @@
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 const supabase=createClient('https://hpbccidrxsdsaptjvwww.supabase.co','sb_publishable_Ia5lQq7LnL15Q-xoin3SMA_cFYj3p7r');
 const $=s=>document.querySelector(s);
-let me,member,updates=[],archiveUpdates=[],mission,members=[],comments=[],helps=[],events=[],dailySales=[],salesTargets=[],monthlySalesTarget=null,taskItems=[],cellQuests=[],difficultySettings=[],xpBonuses=[],shopItems=[],purchases=[],kudos=[],influencerSettings=[],influencerActivities=[],fixedNoteBody='',questWeek=null,avatarUrls={},officeChannel=null,presenceChannel=null,onlineEmails=new Set(),activeEmail,editingEmail,currentView='home',calendarDate=new Date(),archiveEmail=null,archiveWeek=null,rolledCount=0;
+let me,member,updates=[],archiveUpdates=[],mission,members=[],comments=[],helps=[],events=[],dailySales=[],salesTargets=[],monthlySalesTarget=null,taskItems=[],cellQuests=[],difficultySettings=[],xpBonuses=[],shopItems=[],purchases=[],redemptions=[],kudos=[],influencerSettings=[],influencerActivities=[],fixedNoteBody='',questWeek=null,avatarUrls={},officeChannel=null,presenceChannel=null,onlineEmails=new Set(),activeEmail,editingEmail,currentView='home',calendarDate=new Date(),archiveEmail=null,archiveWeek=null,rolledCount=0;
 const weekStart=()=>{const d=new Date(),day=d.getDay()||7;d.setHours(12,0,0,0);d.setDate(d.getDate()-day+1);return d.toISOString().slice(0,10)};
 const monthStart=()=>{const d=new Date();return ymd(new Date(d.getFullYear(),d.getMonth(),1))};
 const monthEnd=()=>{const d=new Date();return ymd(new Date(d.getFullYear(),d.getMonth()+1,0))};
@@ -411,7 +412,7 @@ async function load(){
  if(!m){await supabase.auth.signOut();$('#loginError').textContent='등록되지 않은 계정입니다.';return}
  member=m;
  const{data:rolled,error:rollError}=await supabase.rpc('rollover_my_incomplete_tasks',{p_week_start:weekStart()});if(!rollError)rolledCount=Number(rolled||0);
- const [{data:u},{data:mi},{data:tm},{data:c},{data:h},{data:ev},{data:ds},{data:st},{data:mst},{data:ti},{data:cq},{data:diff},{data:xb},{data:shop},{data:owned},{data:kd},{data:iks},{data:ial},{data:fn},{data:au}]=await Promise.all([
+ const [{data:u},{data:mi},{data:tm},{data:c},{data:h},{data:ev},{data:ds},{data:st},{data:mst},{data:ti},{data:cq},{data:diff},{data:xb},{data:shop},{data:owned},{data:rd},{data:kd},{data:iks},{data:ial},{data:fn},{data:au}]=await Promise.all([
   supabase.from('weekly_updates').select('*').eq('week_start',weekStart()).order('updated_at',{ascending:false}),
   supabase.from('team_missions').select('*').eq('week_start',weekStart()).maybeSingle(),
   supabase.from('team_members').select('*').order('role'),
@@ -427,13 +428,14 @@ async function load(){
   supabase.from('xp_bonus_transactions').select('*'),
   supabase.from('reward_shop_items').select('*').eq('active',true).order('sort_order'),
   supabase.from('member_item_purchases').select('*'),
+  supabase.from('reward_redemptions').select('*').order('created_at',{ascending:false}),
   supabase.from('kudos').select('*').order('created_at',{ascending:false}).limit(30),
   supabase.from('influencer_kpi_settings').select('*').order('week_start',{ascending:false}),
   supabase.from('influencer_activity_logs').select('*').eq('week_start',weekStart()).order('created_at',{ascending:false}),
   supabase.from('member_fixed_notes').select('body').eq('member_email',me.email.toLowerCase()).maybeSingle(),
   supabase.from('weekly_updates').select('*').order('week_start',{ascending:false})
  ]);
- updates=u||[];archiveUpdates=au||[];mission=mi;members=tm||[];comments=c||[];helps=h||[];events=ev||[];dailySales=ds||[];salesTargets=st||[];monthlySalesTarget=mst||null;taskItems=ti||[];cellQuests=cq||[];difficultySettings=diff||[];xpBonuses=xb||[];shopItems=shop||[];purchases=owned||[];kudos=kd||[];influencerSettings=iks||[];influencerActivities=ial||[];fixedNoteBody=fn?.body||'';questWeek=questWeek||weekStart();await loadAvatarUrls();
+ updates=u||[];archiveUpdates=au||[];mission=mi;members=tm||[];comments=c||[];helps=h||[];events=ev||[];dailySales=ds||[];salesTargets=st||[];monthlySalesTarget=mst||null;taskItems=ti||[];cellQuests=cq||[];difficultySettings=diff||[];xpBonuses=xb||[];shopItems=shop||[];purchases=owned||[];redemptions=rd||[];kudos=kd||[];influencerSettings=iks||[];influencerActivities=ial||[];fixedNoteBody=fn?.body||'';questWeek=questWeek||weekStart();await loadAvatarUrls();
  render();subscribeOffice();subscribePresence();$('#login').classList.add('hidden');$('#app').classList.remove('hidden');if(rolledCount){showToast('talk','이월 업무 도착',rolledCount+'개의 미완료 업무가 이번 주로 자동 이관됐어요.');rolledCount=0}
  if(member.must_change_password)$('#passwordModal').classList.remove('hidden');
 }
@@ -535,8 +537,9 @@ const questStats=email=>{const rows=taskItems.filter(x=>x.member_email===email&&
 const influencerXp=email=>{const setting=influencerSettings.find(s=>s.member_email===email&&s.week_start===weekStart()),logs=influencerActivities.filter(a=>a.member_email===email);return setting?logs.reduce((sum,a)=>sum+Number(setting.contact_xp||0)+(a.live_this_week?Number(setting.live_xp||0):0),0):0};
 const effectivePoints=t=>Number(difficultySettings.find(d=>d.task_id===t.id)?.points||t.points||20);
 const earnedXp=email=>taskItems.filter(t=>t.member_email===email&&t.completed).reduce((s,t)=>s+effectivePoints(t),0)+xpBonuses.filter(x=>x.member_email===email).reduce((s,x)=>s+Number(x.points),0)+influencerXp(email);
-const spentXp=email=>purchases.filter(p=>p.member_email===email).reduce((s,p)=>s+Number(shopItems.find(i=>i.id===p.item_id)?.cost||0),0);
-const balanceXp=email=>earnedXp(email)-spentXp(email);
+const spentXp=email=>purchases.filter(p=>p.member_email===email).reduce((s,p)=>s+Number(shopItems.find(i=>i.id===p.item_id)?.cost||0),0)+redemptions.filter(r=>r.member_email===email).reduce((s,r)=>s+Number(r.cost||0),0);
+const redemptionXp=email=>redemptions.filter(r=>r.member_email===email).reduce((s,r)=>s+Number(r.xp_delta||0),0);
+const balanceXp=email=>earnedXp(email)+redemptionXp(email)-spentXp(email);
 const canLead=()=>member?.is_admin||['파트장','팀장'].includes(member?.role);
 
 function renderQuestWeekSelector(){
@@ -568,7 +571,9 @@ function renderGame(){
  const weekTasks=taskItems.filter(t=>t.week_start===activeWeek);
  $('#difficultyBoard').innerHTML=weekTasks.length?weekTasks.map(t=>{const owner=members.find(m=>m.email===t.member_email),d=difficultySettings.find(x=>x.task_id===t.id)||{difficulty:'normal',points:t.points||20};return '<div class="quest-item"><span>⚔️</span><span><b>'+esc(t.title)+'</b><small style="display:block;color:var(--muted)">'+esc(owner?.name||'')+'</small></span>'+(canLead()&&isCurrentWeek?'<select class="difficulty-select" data-difficulty="'+t.id+'"><option value="easy" '+(d.difficulty==='easy'?'selected':'')+'>쉬움 · 10 XP</option><option value="normal" '+(d.difficulty==='normal'?'selected':'')+'>보통 · 20 XP</option><option value="hard" '+(d.difficulty==='hard'?'selected':'')+'>어려움 · 30 XP</option><option value="epic" '+(d.difficulty==='epic'?'selected':'')+'>에픽 · 50 XP</option></select>':'<span class="difficulty '+d.difficulty+'">'+d.points+' XP</span>')+'</div>'}).join(''):'<div class="sales-empty">이번 주 개인 퀘스트가 없어요.</div>';
  const bal=balanceXp(member.email);$('#walletXp').textContent=bal+' XP';$('#shopBalance').textContent=bal+' XP';
- $('#rewardShop').innerHTML=shopItems.map(i=>{const own=purchases.find(p=>p.member_email===member.email&&p.item_id===i.id);return '<div class="shop-item '+(own?'owned':'')+'"><span class="shop-icon">'+i.emoji+'</span><span><b>'+esc(i.name)+'</b><small style="display:block;color:var(--muted)">'+i.cost+' XP</small></span><button class="btn" data-shop="'+i.id+'">'+(own?(own.equipped?'해제':'착용'):'구매')+'</button></div>'}).join('');
+ const practical=shopItems.filter(i=>['coupon','random'].includes(i.category)),wearables=shopItems.filter(i=>!['coupon','random'].includes(i.category));
+ $('#rewardShop').innerHTML='<div style="grid-column:1/-1"><div class="section">REAL-WORLD REWARDS</div><h3 style="margin:4px 0 12px">실속 보상</h3></div>'+practical.map(i=>'<div class="shop-item"><span class="shop-icon">'+i.emoji+'</span><span><b>'+esc(i.name)+'</b><small style="display:block;color:var(--muted)">'+i.cost+' XP'+(i.category==='random'?' · 300 XP / 커피 쿠폰 / -5 XP':'')+'</small></span><button class="btn primary" data-redeem="'+i.id+'" '+(bal<i.cost?'disabled':'')+'>'+(i.category==='random'?'뽑기':'쿠폰 받기')+'</button></div>').join('')+'<div style="grid-column:1/-1;margin-top:10px"><div class="section">AVATAR ITEMS</div><h3 style="margin:4px 0 12px">캐릭터 꾸미기</h3></div>'+wearables.map(i=>{const own=purchases.find(p=>p.member_email===member.email&&p.item_id===i.id);return '<div class="shop-item '+(own?'owned':'')+'"><span class="shop-icon">'+i.emoji+'</span><span><b>'+esc(i.name)+'</b><small style="display:block;color:var(--muted)">'+i.cost+' XP</small></span><button class="btn" data-shop="'+i.id+'" '+(!own&&bal<i.cost?'disabled':'')+'>'+(own?(own.equipped?'해제':'착용'):'구매')+'</button></div>'}).join('');
+ const visibleRedemptions=member.is_admin?redemptions:redemptions.filter(r=>r.member_email===member.email);$('#couponWallet').innerHTML=visibleRedemptions.length?visibleRedemptions.map(r=>{const owner=members.find(m=>m.email===r.member_email),item=shopItems.find(i=>i.id===r.item_id),pending=r.status==='pending';return '<div class="shop-item '+(pending?'owned':'')+'"><span class="shop-icon">'+(item?.emoji||'🎟')+'</span><span><b>'+esc(r.outcome)+'</b><small style="display:block;color:var(--muted)">'+esc(owner?.name||r.member_email)+' · '+new Date(r.created_at).toLocaleDateString('ko-KR')+' · '+(pending?'사용 대기':'처리 완료')+'</small></span>'+(member.is_admin&&pending?'<button class="btn primary" data-fulfill="'+r.id+'">사용 처리</button>':'')+'</div>'}).join(''):'<div class="sales-empty">아직 발급된 보상 쿠폰이 없어요.</div>';
  const myDone=taskItems.filter(t=>t.member_email===member.email&&t.week_start===weekStart()&&t.completed),helpDone=xpBonuses.filter(x=>x.member_email===member.email&&x.source_type==='help').length,kudosGot=kudos.filter(k=>k.receiver_email===member.email).length;
  const badges=[['⚡','퀘스트 스타',myDone.length>=5],['🤝','해결사',helpDone>=1],['💚','칭찬 부자',kudosGot>=3],['🎯','셀 플레이어',cellQuests.some(q=>q.week_start===weekStart()&&q.assignee_email===member.email&&q.completed)]];
  $('#myBadges').innerHTML=badges.map(b=>'<span class="achievement '+(b[2]?'':'locked')+'">'+b[0]+' '+b[1]+'</span>').join('');
@@ -587,11 +592,15 @@ function bindGameActions(){
  document.querySelectorAll('[data-help-action]').forEach(x=>x.onclick=async()=>{const status=x.dataset.helpAction,row={status};if(status==='accepted')row.accepted_at=new Date().toISOString();if(status==='helper_done')row.helper_completed_at=new Date().toISOString();if(status==='resolved')row.resolved_at=new Date().toISOString();const{error}=await supabase.from('help_requests').update(row).eq('id',x.dataset.helpId);if(error)return alert(error.message);await load()});
  document.querySelectorAll('[data-difficulty]').forEach(x=>x.onchange=async()=>{const map={easy:10,normal:20,hard:30,epic:50},{error}=await supabase.from('task_difficulty_settings').upsert({task_id:x.dataset.difficulty,difficulty:x.value,points:map[x.value],updated_by:member.email,updated_at:new Date().toISOString()});if(error)return alert(error.message);await load()});
  document.querySelectorAll('[data-shop]').forEach(x=>x.onclick=()=>shopAction(x.dataset.shop));
+ document.querySelectorAll('[data-redeem]').forEach(x=>x.onclick=()=>redeemReward(x.dataset.redeem,x));
+ document.querySelectorAll('[data-fulfill]').forEach(x=>x.onclick=()=>fulfillReward(x.dataset.fulfill));
 }
 async function updateCellQuest(id,row){const{error}=await supabase.from('cell_quest_items').update({...row,updated_at:new Date().toISOString()}).eq('id',id);if(error)return alert(error.message);await load()}
 async function editCellQuest(id){
  const q=cellQuests.find(x=>x.id===id);if(!q)return;const title=prompt('소재 퀘스트 이름',q.title);if(!title)return;const quantity=Number(prompt('소재 개수 (1~5)',q.quantity));if(!quantity||quantity<1||quantity>5)return alert('1~5개로 입력해 주세요.');await updateCellQuest(id,{title,quantity});
 }
+async function redeemReward(id,button){const item=shopItems.find(i=>i.id===id);if(!item||button.disabled)return;if(!confirm(item.name+'에 '+item.cost+' XP를 사용할까요?'))return;button.disabled=true;button.textContent='처리 중…';const{data,error}=await supabase.rpc('redeem_practical_reward',{p_item_id:id});if(error){button.disabled=false;button.textContent=item.category==='random'?'뽑기':'쿠폰 받기';return alert(error.message)}await load();showToast('talk',item.category==='random'?'🎲 랜덤박스 결과':'🎟 쿠폰 발급 완료',data.outcome+(data.status==='pending'?' · 쿠폰함에서 확인하세요!':''))}
+async function fulfillReward(id){if(!member.is_admin||!confirm('이 보상을 사용 완료로 처리할까요?'))return;const{error}=await supabase.from('reward_redemptions').update({status:'fulfilled',fulfilled_at:new Date().toISOString(),fulfilled_by:member.email}).eq('id',id);if(error)return alert(error.message);await load()}
 async function shopAction(id){const own=purchases.find(p=>p.member_email===member.email&&p.item_id===id);if(!own){const{error}=await supabase.rpc('purchase_reward_item',{p_item_id:id});if(error)return alert(error.message)}else{const{error}=await supabase.rpc('set_equipped_item',{p_item_id:id,p_equipped:!own.equipped});if(error)return alert(error.message)}await load()}
 function renderNotifications(){
  if(!member)return;const last=localStorage.getItem('notice-read-'+member.email)||'1970-01-01',items=[];
