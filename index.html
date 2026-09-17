@@ -420,14 +420,14 @@ async function load(){
  const{data:{session}}=await supabase.auth.getSession();
  if(!session){$('#login').classList.remove('hidden');$('#app').classList.add('hidden');return}
  me=session.user;
- const{data:m}=await supabase.from('team_members').select('*').eq('email',me.email.toLowerCase()).single();
+ const{data:m}=await supabase.from('team_members').select('*').eq('email',me.email.toLowerCase()).eq('active',true).single();
  if(!m){await supabase.auth.signOut();$('#loginError').textContent='등록되지 않은 계정입니다.';return}
  member=m;
  const{data:rolled,error:rollError}=await supabase.rpc('rollover_my_incomplete_tasks',{p_week_start:weekStart()});if(!rollError)rolledCount=Number(rolled||0);
  const [{data:u},{data:mi},{data:tm},{data:c},{data:h},{data:ev},{data:ds},{data:st},{data:mst},{data:ti},{data:cq},{data:diff},{data:xb},{data:shop},{data:owned},{data:rd},{data:kd},{data:iks},{data:ial},{data:fn},{data:au},{data:ce},{data:cm}]=await Promise.all([
   supabase.from('weekly_updates').select('*').eq('week_start',weekStart()).order('updated_at',{ascending:false}),
   supabase.from('team_missions').select('*').eq('week_start',weekStart()).maybeSingle(),
-  supabase.from('team_members').select('*').order('role'),
+  supabase.from('team_members').select('*').eq('active',true).order('role'),
   supabase.from('dashboard_comments').select('*').eq('week_start',weekStart()).order('created_at'),
   supabase.from('help_requests').select('*').order('week_start',{ascending:false}),
   supabase.from('shared_calendar_events').select('*').order('start_date'),
